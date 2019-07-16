@@ -50,5 +50,5 @@ void movePoint(int x_start,int y_start,int x_finish,int y_finish){
     
 }
 void loop() {
-    
+    memDisplay(1,2);
 }
