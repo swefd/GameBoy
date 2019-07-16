@@ -22,5 +22,4 @@ void memDisplay(short int x,short int y){
 }
   
 void loop() {
-    MY_VCEX_VUEBEM();
 }
