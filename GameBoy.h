@@ -28,8 +28,9 @@ class LedControl {
         /* The maximum number of devices we use */
 
     public:
-        int maxDevices=2;
-       const int addr=1; 
+       int maxDevices=2;
+       const int addr=1;
+       bool display[8][16]; 
         /* 
          * Create a new controler 
          * Params :
@@ -82,9 +83,18 @@ class LedControl {
         delaytime время переключение между светодиодами
          */
         void testMatrix(short int delaytime);
-     
-        
+        /*
+        Заносит в масив данных статический элемент картинки на дисплее
+        х и у - координаты точки. 
+         */
+        void memDisplay(short int x,short int y);   
+        void point(int x,int y);
+        void point(int old_x, int old_y,int x,int y);
+        bool chekCollision(int x, int y);
+        void drowDisplay();
 };
+
+
 
 #endif	//LedControl.h
 

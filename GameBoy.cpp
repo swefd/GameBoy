@@ -125,3 +125,40 @@ for(int y1=0;y1<16;y1++){
 }
 clearDisplay();       
 }
+void LedControl::memDisplay(short int x,short int y){
+    x=abs(x-7);
+    display[x][y]=true;
+}
+void LedControl::point(int x,int y){
+    x=abs(x-7);
+    if(x<8&&x>0&&y>0&&y<16){
+        setLed(x,y,1);
+    }
+    else return;
+    
+    
+}
+void LedControl::point(int old_x, int old_y,int x,int y){
+    x=abs(x-7);
+    old_x=abs(old_x-7);
+    setLed(old_x,old_y,0);
+    if(x<8&&x>0&&y>=0&&y<16){
+        setLed(x,y,1);
+    }
+    else{
+        setLed(old_x,old_y,1);
+        return; 
+    }
+}
+bool LedControl::chekCollision(int x, int y){
+    if(display[x][y]==1||x+1>7||x-1<0||y+1>15||y-1<0) return true;
+    else return false;
+
+}
+void LedControl::drowDisplay(){
+      for(int x=0;x<8;x++){
+      for(int y=0;y<16;y++){
+          setLed(x,y,display[x][y]);
+      }
+  }
+}
