@@ -15,11 +15,11 @@ LedControl::LedControl(int dataPin, int clkPin, int csPin) {
     pinMode(SPI_CLK,OUTPUT);
     pinMode(SPI_CS,OUTPUT);
     digitalWrite(SPI_CS,HIGH);
-    SPI_MOSI=dataPin;
-    for(int i=0;i<64;i++) 
-        status[i]=0x00;
+    //SPI_MOSI=dataPin;
+    for(int i=0;i<64;i++) status[i]=0x00;
     for(int i=0;i<maxDevices;i++) {
         spiTransfer(i,OP_DISPLAYTEST,0);
+        spiTransfer(i, OP_SCANLIMIT,7);
         spiTransfer(i,OP_DECODEMODE,0);
         clearDisplay();
         shutdown(true);
@@ -55,15 +55,11 @@ void LedControl::clearDisplay() {
     status[offset2+i]=0;
     spiTransfer((addr-1), i+1,status[offset2+i]);
     }
-     for(int x=0;x<8;x++){
-      for(int y=0;y<16;y++){
-          display[x][y]=0;
-      }
-  }
+    
 }
 void LedControl::setLed(int row, int column, boolean state) {
     if(column>=8){
-        column=column-8;
+        column=abs(column-8);
     int offset;
     byte val=0x00;
     
@@ -113,7 +109,7 @@ void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data)
     digitalWrite(SPI_CS,HIGH);
 }    
 void LedControl::testMatrix(short int delaytime){
-    for(int x=0;x<8;x++){
+for(int x=0;x<8;x++){
     for(int y=0;y<16;y++){
         setLed(x,y,true);
         delay(delaytime);
@@ -130,13 +126,15 @@ for(int y1=0;y1<16;y1++){
 }
 clearDisplay();       
 }
+
 void LedControl::memDisplay(short int x,short int y){
     x=abs(x-7);
     display[x][y]=true;
 }
 void LedControl::drowPoint(int x,int y){
     x=abs(x-7);
-    if(x<8&&x>0&&y>0&&y<16){
+
+    if(x<8&&x>-1&&y>0&&y<16){
         setLed(x,y,1);
     }
     else return;
@@ -150,7 +148,7 @@ void LedControl::wipePoint(int x,int y){
 }
 bool LedControl::chekCollision(int x, int y){
     x=abs(x-7);
-    if(display[x][y]==1||x>8||x<-1||y>15||y<0) return true;
+    if(display[x][y]==1||x>7||x<0||y>15||y<0) return true;
     else return false;
 
 }
