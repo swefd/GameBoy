@@ -88,10 +88,11 @@ class LedControl {
         х и у - координаты точки. 
          */
         void memDisplay(short int x,short int y);   
-        void point(int x,int y);
-        void point(int old_x, int old_y,int x,int y);
+        void drowPoint(int x,int y);
+        void wipePoint(int x,int y);
         bool chekCollision(int x, int y);
         void drowDisplay();
+        
 };
 
 
