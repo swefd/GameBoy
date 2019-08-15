@@ -5,7 +5,10 @@
 #define OP_SCANLIMIT   11
 #define OP_SHUTDOWN    12
 #define OP_DISPLAYTEST 15
-
+#define UP             1
+#define DOWN           2
+#define LEFT           3
+#define RIGHT          4
 
 LedControl::LedControl(int dataPin, int clkPin, int csPin) {
     SPI_MOSI=dataPin;
@@ -143,6 +146,7 @@ void LedControl::wipePoint(int x,int y){
     x=abs(x-7);
     if(x<8&&x>0&&y>0&&y<16){
         setLed(x,y,0);
+        display[x][y]=0;
     }
     else return;
 }
@@ -158,4 +162,77 @@ void LedControl::drowDisplay(){
           setLed(abs(x-7),y,display[abs(x-7)][y]);
       }
   }
+}
+bool LedControl::chekState(int x,int y){
+        if(display[x][y]==1) return true;
+        else false;
+}       
+/*
+void LedControl::gravity(int vector_name){
+byte free_line;
+bool line_is_free=false;
+byte count=0;
+if(vector_name==2){
+    for(int y=15;y>=0;y--){
+        for(int x=0;x<8;x++){
+            if(display[abs(x-7)][y]==false){
+                count++;
+                Serial.println(count);
+                if(count==8){
+                        for(y;y>-1;y--){
+                            for(int x=0;x<8;x++){
+                                display[abs(x-7)][free_line]=display[abs(x-7)][free_line-1];
+                                display[abs(x-7)][free_line-1]=false;
+                                
+                            }
+                        }
+                        count=0;
+                    }
+                }      
+            }
+        }
+    }
+}
+*/
+int LedControl::moveX(int start_x, int start_y, int move_var ){
+    start_x=abs(start_x-7);
+    if(digitalRead(5)){
+        if(display[start_x-move_var][start_y]==1||start_x-move_var<0) return 0;
+        else return move_var;
+    }
+    else if(digitalRead(6)){
+        if(display[start_x+move_var][start_y]==1||start_x+move_var>7) return 0;
+        else return -move_var;
+    }
+    else return 0;
+}
+void LedControl::clearLine(byte num_line){
+    for(int x=0;x<8;x++) {
+        display[abs(x-7)][num_line]=false;
+        setLed(abs(x-7),num_line,0);
+    }
+}        
+void LedControl::fullLine(){
+    for(int y=15;y>-1;y--){
+        byte count=0;
+        for(int x=0;x<8;x++){
+            if(display[abs(x-7)][y]==true){
+                count++;
+            }
+            if(count==8) {
+                clearLine(y);
+                for(y;y>=0;y--){  
+                    for(int x=0;x<8;x++){
+                        if(y==0){
+                            for(int x=0;x<8;x++) display[abs(x-7)][y-1]=false;
+                        return;
+                        }
+                        display[abs(x-7)][y]=display[abs(x-7)][y-1];
+                        display[abs(x-7)][y-1]=false;
+
+                    }
+                }    
+            }
+        }
+    }
 }

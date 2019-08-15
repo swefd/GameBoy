@@ -8,7 +8,10 @@
 #else
 #include <WProgram.h>
 #endif
-
+#define UP    1
+#define DOWN  2
+#define LEFT  3
+#define RIGHT 4
 
 class LedControl {
     private :
@@ -92,6 +95,14 @@ class LedControl {
         void wipePoint(int x,int y);
         bool chekCollision(int x, int y);
         void drowDisplay();
+        
+        bool chekState(int x,int y);
+        
+        void wipeLine();
+        void clearLine(byte num_line);
+        void gravity(int vector_name);
+        int moveX(int start_x, int start_y, int move_var);
+        void fullLine();
         
 };
 
