@@ -19,13 +19,9 @@ void testFoo(){
         lc.fullLine();
         delay(100);
     }
-    //lc.gravity(DOWN);
+    
 }
-/*
-void pointObject(int x,int y){
 
-}
-*/
 void bigPixel(int x, int y){
     lc.setLed(x,y,1);
     lc.setLed(x,y+1,1);

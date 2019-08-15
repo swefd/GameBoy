@@ -167,33 +167,6 @@ bool LedControl::chekState(int x,int y){
         if(display[x][y]==1) return true;
         else false;
 }       
-/*
-void LedControl::gravity(int vector_name){
-byte free_line;
-bool line_is_free=false;
-byte count=0;
-if(vector_name==2){
-    for(int y=15;y>=0;y--){
-        for(int x=0;x<8;x++){
-            if(display[abs(x-7)][y]==false){
-                count++;
-                Serial.println(count);
-                if(count==8){
-                        for(y;y>-1;y--){
-                            for(int x=0;x<8;x++){
-                                display[abs(x-7)][free_line]=display[abs(x-7)][free_line-1];
-                                display[abs(x-7)][free_line-1]=false;
-                                
-                            }
-                        }
-                        count=0;
-                    }
-                }      
-            }
-        }
-    }
-}
-*/
 int LedControl::moveX(int start_x, int start_y, int move_var ){
     start_x=abs(start_x-7);
     if(digitalRead(5)){
