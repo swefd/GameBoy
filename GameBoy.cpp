@@ -221,16 +221,11 @@ void LedControl::fullLine(){
             }
             if(count==8) {
                 clearLine(y);
-                for(y;y>=0;y--){  
+                for(y;y>0;y=y-1){  
                     for(int x=0;x<8;x++){
-                        if(y==0){
-                            for(int x=0;x<8;x++) display[abs(x-7)][y-1]=false;
-                        return;
-                        }
                         display[abs(x-7)][y]=display[abs(x-7)][y-1];
-                        display[abs(x-7)][y-1]=false;
-
                     }
+                    clearLine(y-1);
                 }    
             }
         }
