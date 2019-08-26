@@ -166,7 +166,12 @@ void LedControl::drowDisplay(){
 bool LedControl::chekState(int x,int y){
         if(display[x][y]==1) return true;
         else false;
-}       
+} 
+bool LedControl::isFree(int x,int y){
+    x=abs(x-7);
+    if(display[x][y]==1||x<0||x>7||y<0||y>15) return false;
+    else return true;
+}      
 int LedControl::moveX(int start_x, int start_y, int move_var ){
     start_x=abs(start_x-7);
     if(digitalRead(5)){

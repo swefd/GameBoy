@@ -3,6 +3,7 @@
 LedControl lc=LedControl(12,11,10);
 byte position=5;
 byte gameis=0;
+int x_cube,y_cube;
 bool isChoos=false;  
 unsigned long delaytime=100;
 int x,y;
@@ -19,7 +20,93 @@ void testFoo(){
         lc.fullLine();
         delay(100);
     }
+}
+void testCube(){
+    x=1;
+    for(y=0;y<16;y++){
+        lc.drowDisplay();
+        if(digitalRead(5)||digitalRead(6)) {
+            lc.clearDisplay();
+            x=x+lc.moveX(x,y,1);
+            lc.drowPoint(x,y);
+            lc.drowPoint(x,y+1);
+            lc.drowPoint(x+1,y);
+            lc.drowPoint(x+1,y+1);
+            lc.drowDisplay();
+        }
+        if(lc.chekCollision(x,y+2)||lc.chekCollision(x+1,y+2)) {
+            lc.memDisplay(x,y);
+            lc.memDisplay(x,y+1);
+            lc.memDisplay(x+1,y);
+            lc.memDisplay(x+1,y+1);
+            return;
+        }
+            lc.drowPoint(x,y);
+            lc.drowPoint(x,y+1);
+            lc.drowPoint(x+1,y);
+            lc.drowPoint(x+1,y+1);
+            lc.fullLine();
+            delay(100);
+
+    }
+}
+void Cube(int x, int y){
+byte cordX[]={x,x+1,x,x+1};
+byte cordY[]={y,y,y+1,y+1};
     
+    for(int i=0;i<4;i++){
+        lc.setLed(abs(cordX[i]-7),cordY[i],1);
+    }
+    
+}
+
+void tetrisBlock(int x){
+int timedel=100;
+x=abs(x-7);
+for(int y=0;y<16;y++){
+    if(digitalRead(5))x=x-lc.moveX(x,y,1);
+    if(digitalRead(6))x=x-lc.moveX(x-1,y,1);
+    
+    lc.clearDisplay();
+    lc.drowDisplay();
+    if(lc.isFree(x,y+2)||lc.isFree(x+1,y+2)){
+        lc.setLed(x,y,1);
+        lc.setLed(x,y+1,1);
+        lc.setLed(x+1,y,1);
+        lc.setLed(x+1,y+1,1);
+    }
+    else {
+        x=abs(x-7);
+        lc.memDisplay(x,y);
+        lc.memDisplay(x,y+1);
+        lc.memDisplay(x+1,y);
+        lc.memDisplay(x+1,y+1);
+    } 
+    delay(timedel); 
+}
+/*
+int y=0;
+int x=random(-1,8);
+byte cordX[]={x,x+1,x,x+1};
+byte cordY[]={y,y,y+1,y+1};
+int timedel=100;
+    for(y;y<16;y++){
+        
+        x=x+lc.moveX(x,y,1);
+        if(lc.isFree(x,y+2)||lc.isFree(x+1,y+2)){
+            lc.clearDisplay();
+            for(int i=0;i<4;i++){
+                lc.setLed(abs(cordX[i]-7),cordY[i],1);
+            }
+            delay(timedel);
+        }
+        else {
+            for(int i=0;i<4;i++){
+                lc.memDisplay(abs(cordX[i]-7),cordY[i]);
+            }
+        }  
+    }
+*/
 }
 
 void bigPixel(int x, int y){
@@ -140,6 +227,7 @@ void gonka(){
     deletLine(y+9);
     }
 }
+
 void setup() {
   lc.shutdown(false);
   lc.setIntensity(0);
@@ -154,14 +242,25 @@ void setup() {
           lc.display[x][y]=0;
       }
   }
-  bootloader();
+ //bootloader();
 }
 
   
 void loop() {
-if(gameis==1) gonka();
+testCube();
+delay(10);
+/*
+if(gameis==1){
+for(;;){
+gonka();
+}
+} 
+
 if(gameis==2){
+for(;;){
 lc.drowDisplay();
 testFoo();
 }
+}
+*/
 }
