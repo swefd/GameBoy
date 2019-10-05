@@ -172,14 +172,14 @@ bool LedControl::isFree(int x,int y){
     if(display[x][y]==1||x<0||x>7||y<0||y>15) return false;
     else return true;
 }      
-int LedControl::moveX(int start_x, int start_y, int move_var ){
+int LedControl::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
     start_x=abs(start_x-7);
     if(digitalRead(5)){
-        if(display[start_x-move_var][start_y]==1||start_x-move_var<0) return 0;
+        if(display[start_x-move_var-right_x][start_y]==1||start_x-move_var-right_x<0) return 0;
         else return move_var;
     }
     else if(digitalRead(6)){
-        if(display[start_x+move_var][start_y]==1||start_x+move_var>7) return 0;
+        if(display[start_x+move_var+left_x][start_y]==1||start_x+move_var+left_x>7) return 0;
         else return -move_var;
     }
     else return 0;

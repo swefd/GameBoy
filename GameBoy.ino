@@ -11,7 +11,7 @@ void testFoo(){
     x=1;
     for(y=0;y<16;y++){
         lc.drowDisplay();    
-        if(digitalRead(5)||digitalRead(6)) x=x+lc.moveX(x,y,1);
+        if(digitalRead(5)||digitalRead(6)) x=x+lc.moveX(x,y,0,0,1);
         if(lc.chekCollision(x,y+1)) {
             lc.memDisplay(x,y);
             return;
@@ -21,6 +21,54 @@ void testFoo(){
         delay(100);
     }
 }
+void Stick(){
+    x=1;
+    byte rotate=0;
+    for(y=0;y<16;y++){
+        lc.drowDisplay();
+        if(digitalRead(5)&&digitalRead(6)) rotate++;
+        if(digitalRead(5)||digitalRead(6)) {
+            if(rotate>1) rotate=0;
+            lc.clearDisplay();
+            lc.drowDisplay();
+            if(rotate=0){
+                x=x+lc.moveX(x,y,0,0,1);
+                lc.drowPoint(x,y);
+                lc.drowPoint(x,y-1);
+                lc.drowPoint(x,y-2);
+                lc.drowPoint(x,y-3);
+            }
+            if(rotate=1){
+                x=x+lc.moveX(x,y,0,0,1);
+                lc.drowPoint(x,y);
+                lc.drowPoint(x-1,y);
+                lc.drowPoint(x-2,y);
+                lc.drowPoint(x-3,y);
+            }
+        }
+        if(lc.chekCollision(x,y+1)) {
+            if(rotate=0){
+                lc.memDisplay(x,y);
+                lc.memDisplay(x,y-1);
+                lc.memDisplay(x,y-2);
+                lc.memDisplay(x,y-3);
+                return;
+            }
+            if(rotate=1){
+                lc.memDisplay(x,y);
+                lc.memDisplay(x-1,y);
+                lc.memDisplay(x-2,y);
+                lc.memDisplay(x-3,y);
+            }
+         }
+        lc.drowPoint(x,y);
+        lc.drowPoint(x,y-1);
+        lc.drowPoint(x,y-2);
+        lc.drowPoint(x,y-3);
+        lc.fullLine();
+        delay(100);
+    }    
+}
 void Cube(){
     x=1;
     for(y=0;y<16;y++){
@@ -28,12 +76,11 @@ void Cube(){
         if(digitalRead(5)||digitalRead(6)) {
             lc.clearDisplay();
             lc.drowDisplay();
-            x=x+lc.moveX(x,y,1);
+            x=x+lc.moveX(x,y,0,1,1);
             lc.drowPoint(x,y);
             lc.drowPoint(x,y+1);
             lc.drowPoint(x+1,y);
             lc.drowPoint(x+1,y+1);
-            
         }
         if(lc.chekCollision(x,y+2)||lc.chekCollision(x+1,y+2)) {
             lc.memDisplay(x,y);
@@ -42,13 +89,12 @@ void Cube(){
             lc.memDisplay(x+1,y+1);
             return;
         }
-            lc.drowPoint(x,y);
-            lc.drowPoint(x,y+1);
-            lc.drowPoint(x+1,y);
-            lc.drowPoint(x+1,y+1);
-            lc.fullLine();
-            delay(100);
-
+        lc.drowPoint(x,y);
+        lc.drowPoint(x,y+1);
+        lc.drowPoint(x+1,y);
+        lc.drowPoint(x+1,y+1);
+        lc.fullLine();
+        delay(100);
     }
 }
 void bigPixel(int x, int y){
@@ -176,7 +222,7 @@ void setup() {
     lc.shutdown(false);
     lc.setIntensity(0);
     lc.clearDisplay();
-    lc.testMatrix(10);  
+    lc.testMatrix(100);  
     pinMode(5,INPUT);
     pinMode(6,INPUT);
     Serial.begin(9600);
@@ -200,7 +246,11 @@ void loop() {
     if(gameis==2){
         for(;;){
             lc.drowDisplay();
+            x=3;
+            byte rand_block=random(0,8);
+            Stick();
             Cube();
+            
         }
     }
 }

@@ -123,7 +123,7 @@ class LedControl {
         /*
         Изменяет положение точки, старое положение удаляет, новое отрисовывает. 
         */
-        int moveX(int start_x, int start_y, int move_var);
+        int moveX(int start_x, int start_y,int left_x,int right_x, int move_var);
         /*
         Ищет заполненную линию в памяти дисплея и очищает ее. 
         */
