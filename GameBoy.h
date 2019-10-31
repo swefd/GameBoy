@@ -2,15 +2,14 @@
 #define GameBoy_h
 
 #include <avr/pgmspace.h>
-
-#if (ARDUINO >= 100)
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
 
+#define UP    1
+#define DOWN  2
+#define LEFT  3
+#define RIGHT 4
 
-class LedControl {
+class GameBoy {
     private :
         /* The array for shifting the data to the devices */
         byte spidata[16];
@@ -28,8 +27,9 @@ class LedControl {
         /* The maximum number of devices we use */
 
     public:
-        int maxDevices=2;
-       const int addr=1; 
+       int maxDevices=2;
+       const int addr=1;
+       bool display[8][16]; 
         /* 
          * Create a new controler 
          * Params :
@@ -38,7 +38,7 @@ class LedControl {
          * csPin		pin for selecting the device 
          * numDevices	maximum number of devices that can be controled
          */
-        LedControl(int dataPin, int clkPin, int csPin);
+        GameBoy();
 
         /* 
          * Set the shutdown (power saving) mode for the device
@@ -82,11 +82,74 @@ class LedControl {
         delaytime время переключение между светодиодами
          */
         void testMatrix(short int delaytime);
-     
+        /*
+        Заносит в масив данных статический элемент картинки на дисплее
+        х и у - координаты точки. 
+         */
+        void memDisplay(short int x,short int y);  
+        /*
+        Включает один пиксель на дисплее, без запоминания в память. 
+        */ 
+        void drawPoint(int x,int y);
+        /*
+        Выключает один пиксель на дисплее, без стирания из памяти
+        */
+        void wipePoint(int x,int y);
+        /*
+        Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
+        Так же проверяет не выходит ли за границы дисплея данный пиксель.
+        */
+        bool chekCollision(int x, int y);
+        /*
+        Отрисовывает матрицу которая содержит в себе сохраненные точки установленные в высокий уровень. 
+        */
+        void drawDisplay();
+        /*
+        Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
+        */
+        bool chekState(int x,int y);
+        /*
+        Очищает линию
+        */
+        void clearLine(byte num_line);
+        /*
+        заставляет падать все точки которые занесены в память дисплея вниз. 
+        */
+        void gravity(int vector_name);
+        /*
+        Изменяет положение точки, старое положение удаляет, новое отрисовывает. 
+        */
+        int moveX(int start_x, int start_y,int left_x,int right_x, int move_var);
+        /*
+        Ищет заполненную линию в памяти дисплея и очищает ее. 
+        */
+        void fullLine();
+        /*
+        Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
+        Так же проверяет не выходит ли за границы дисплея данный пиксель.
+        */
+        bool isFree(int x,int y);
+        
+        /*
+         keyCode=1; KEY1
+         keyCode=2; KEY2
+         keyCode=5; Right
+         keyCode=4; Down
+         keyCode=3; Up
+         keyCode=6; Left
+        */
+        int getKey();
+        
+
+        void begin(byte Intensity);
+
+
         
 };
 
-#endif	//LedControl.h
+
+
+#endif	//GameBoy.h
 
 
 
