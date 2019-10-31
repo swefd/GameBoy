@@ -13,7 +13,7 @@
 #define LEFT  3
 #define RIGHT 4
 
-class LedControl {
+class GameBoy {
     private :
         /* The array for shifting the data to the devices */
         byte spidata[16];
@@ -42,7 +42,7 @@ class LedControl {
          * csPin		pin for selecting the device 
          * numDevices	maximum number of devices that can be controled
          */
-        LedControl(int dataPin, int clkPin, int csPin);
+        GameBoy();
 
         /* 
          * Set the shutdown (power saving) mode for the device

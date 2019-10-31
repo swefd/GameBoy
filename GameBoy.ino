@@ -1,12 +1,13 @@
 #include "GameBoy.h"
 
-LedControl lc=LedControl(12,11,10);
+LedControl lc;
 byte position=5;
 byte gameis=0;
 int x_cube,y_cube;
 bool isChoos=false;  
 unsigned long delaytime=100;
 int x,y;
+
 void testFoo(){
     x=1;
     for(y=0;y<16;y++){

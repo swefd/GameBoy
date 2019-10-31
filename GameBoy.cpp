@@ -10,10 +10,10 @@
 #define LEFT           3
 #define RIGHT          4
 
-LedControl::LedControl(int dataPin, int clkPin, int csPin) {
-    SPI_MOSI=dataPin;
-    SPI_CLK=clkPin;
-    SPI_CS=csPin;
+GameBoy::GameBoy() {
+    SPI_MOSI=12;
+    SPI_CLK=11;
+    SPI_CS=10;
     pinMode(SPI_MOSI,OUTPUT);
     pinMode(SPI_CLK,OUTPUT);
     pinMode(SPI_CS,OUTPUT);
@@ -28,7 +28,7 @@ LedControl::LedControl(int dataPin, int clkPin, int csPin) {
         shutdown(true);
     }
 }
-void LedControl::shutdown(bool b) {
+void GameBoy::shutdown(bool b) {
    
     if(b){
         spiTransfer(addr, OP_SHUTDOWN,0);
@@ -40,12 +40,12 @@ void LedControl::shutdown(bool b) {
         }
 }
 
-void LedControl::setIntensity(int intensity) {
+void GameBoy::setIntensity(int intensity) {
     if(intensity>=0 && intensity<16)	
         spiTransfer(addr, OP_INTENSITY,intensity);
         spiTransfer(addr-1, OP_INTENSITY,intensity);
 }
-void LedControl::clearDisplay() {
+void GameBoy::clearDisplay() {
     short int offset1;
     short int offset2;
     offset1=addr*8;
@@ -60,7 +60,7 @@ void LedControl::clearDisplay() {
     }
     
 }
-void LedControl::setLed(int row, int column, boolean state) {
+void GameBoy::setLed(int row, int column, boolean state) {
     if(column>=8){
         column=abs(column-8);
     int offset;
@@ -93,7 +93,7 @@ void LedControl::setLed(int row, int column, boolean state) {
     }
     
 }
-void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data) {
+void GameBoy::spiTransfer(int addr, volatile byte opcode, volatile byte data) {
     //Create an array with the data to shift out
     int offset=addr*2;
     int maxbytes=maxDevices*2;
@@ -111,7 +111,7 @@ void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data)
     //latch the data onto the display
     digitalWrite(SPI_CS,HIGH);
 }    
-void LedControl::testMatrix(short int delaytime){
+void GameBoy::testMatrix(short int delaytime){
 for(int x=0;x<8;x++){
     for(int y=0;y<16;y++){
         setLed(x,y,true);
@@ -130,11 +130,11 @@ for(int y1=0;y1<16;y1++){
 clearDisplay();       
 }
 
-void LedControl::memDisplay(short int x,short int y){
+void GameBoy::memDisplay(short int x,short int y){
     x=abs(x-7);
     display[x][y]=true;
 }
-void LedControl::drawPoint(int x,int y){
+void GameBoy::drawPoint(int x,int y){
     x=abs(x-7);
 
     if(x<8&&x>-1&&y>0&&y<16){
@@ -142,7 +142,7 @@ void LedControl::drawPoint(int x,int y){
     }
     else return;
 }
-void LedControl::wipePoint(int x,int y){
+void GameBoy::wipePoint(int x,int y){
     x=abs(x-7);
     if(x<8&&x>0&&y>0&&y<16){
         setLed(x,y,0);
@@ -150,29 +150,29 @@ void LedControl::wipePoint(int x,int y){
     }
     else return;
 }
-bool LedControl::chekCollision(int x, int y){
+bool GameBoy::chekCollision(int x, int y){
     x=abs(x-7);
     if(display[x][y]==1||x>7||x<0||y>15||y<0) return true;
     else return false;
 
 }
-void LedControl::drawDisplay(){
+void GameBoy::drawDisplay(){
       for(int x=0;x<8;x++){
       for(int y=0;y<16;y++){
           setLed(abs(x-7),y,display[abs(x-7)][y]);
       }
   }
 }
-bool LedControl::chekState(int x,int y){
+bool GameBoy::chekState(int x,int y){
         if(display[x][y]==1) return true;
         else false;
 } 
-bool LedControl::isFree(int x,int y){
+bool GameBoy::isFree(int x,int y){
     x=abs(x-7);
     if(display[x][y]==1||x<0||x>7||y<0||y>15) return false;
     else return true;
 }      
-int LedControl::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
+int GameBoy::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
     start_x=abs(start_x-7);
     if(digitalRead(5)){
         if(display[start_x-move_var-right_x][start_y]==1||start_x-move_var-right_x<0) return 0;
@@ -184,13 +184,13 @@ int LedControl::moveX(int start_x, int start_y,int left_x,int right_x, int move_
     }
     else return 0;
 }
-void LedControl::clearLine(byte num_line){
+void GameBoy::clearLine(byte num_line){
     for(int x=0;x<8;x++) {
         display[abs(x-7)][num_line]=false;
         setLed(abs(x-7),num_line,0);
     }
 }        
-void LedControl::fullLine(){
+void GameBoy::fullLine(){
     for(int y=15;y>-1;y--){
         byte count=0;
         for(int x=0;x<8;x++){
@@ -209,7 +209,7 @@ void LedControl::fullLine(){
         }
     }
 }
-int LedControl::getKey(){
+int GameBoy::getKey(){
     pinMode(A1,INPUT);
     pinMode(2,INPUT);
     pinMode(3,INPUT);
