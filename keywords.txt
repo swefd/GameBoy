@@ -22,7 +22,7 @@ wipePoint	KEYWORD2
 chekCollision	KEYWORD2
 drawDisplay	KEYWORD2
 chekState	KEYWORD2
-
+getKey  KEYWORD2
 ######################################
 # Constants (LITERAL1)
 #######################################
