@@ -74,7 +74,7 @@ void Cube(){
     x=1;
     for(y=0;y<16;y++){
         lc.drawDisplay();
-        if(lc.getKey()==3||lc.getKey()==6) {
+        if(lc.getKey()==4||lc.getKey()==5) {
             lc.clearDisplay();
             lc.drawDisplay();
             x=x+lc.moveX(x,y,0,1,1);
@@ -230,19 +230,10 @@ void gonka(){
 }
 
 void setup() {
-    lc.shutdown(false);
-    lc.setIntensity(0);
-    lc.clearDisplay();
+    lc.begin(0);
     //lc.testMatrix(100);  
-    pinMode(5,INPUT);
-    pinMode(6,INPUT);
     Serial.begin(9600);
-    lc.display[0][0]=1;
-    for(int x=0;x<8;x++){
-        for(int y=0;y<16;y++){
-          lc.display[x][y]=0;
-        }  
-    }
+
     bootloader();
 }
 
@@ -258,10 +249,9 @@ void loop() {
         for(;;){
             lc.drawDisplay();
             x=3;
-            byte rand_block=random(0,8);
-            Stick();
+            //byte rand_block=random(0,8);
+           // Stick();
             Cube();
-            
         }
     }
 }

@@ -2,12 +2,8 @@
 #define GameBoy_h
 
 #include <avr/pgmspace.h>
-
-#if (ARDUINO >= 100)
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
+
 #define UP    1
 #define DOWN  2
 #define LEFT  3
@@ -143,6 +139,9 @@ class GameBoy {
          keyCode=6; Left
         */
         int getKey();
+        
+
+        void begin(byte Intensity);
 
 
         

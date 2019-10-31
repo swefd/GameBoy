@@ -118,9 +118,9 @@ for(int x=0;x<8;x++){
         delay(delaytime);
     }
 } 
-delay(1000);
+delay(delaytime*10);
 clearDisplay();
-delay(100);
+delay(delaytime/10);
 for(int y1=0;y1<16;y1++){
     for(int x1=0;x1<8;x1++){
         setLed(x1,y1,true);
@@ -174,11 +174,11 @@ bool GameBoy::isFree(int x,int y){
 }      
 int GameBoy::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
     start_x=abs(start_x-7);
-    if(digitalRead(5)){
+    if(getKey()==4){
         if(display[start_x-move_var-right_x][start_y]==1||start_x-move_var-right_x<0) return 0;
         else return move_var;
     }
-    else if(digitalRead(6)){
+    else if(getKey()==5){
         if(display[start_x+move_var+left_x][start_y]==1||start_x+move_var+left_x>7) return 0;
         else return -move_var;
     }
@@ -227,4 +227,9 @@ int GameBoy::getKey(){
     delay(5);
     if(digitalRead(3))keyCode=2;//KEY2
     return keyCode;
+}
+void GameBoy::begin(byte Intensity){
+    shutdown(false);
+    setIntensity(0);
+    clearDisplay();
 }
