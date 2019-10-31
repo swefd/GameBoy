@@ -134,7 +134,7 @@ void LedControl::memDisplay(short int x,short int y){
     x=abs(x-7);
     display[x][y]=true;
 }
-void LedControl::drowPoint(int x,int y){
+void LedControl::drawPoint(int x,int y){
     x=abs(x-7);
 
     if(x<8&&x>-1&&y>0&&y<16){
@@ -156,7 +156,7 @@ bool LedControl::chekCollision(int x, int y){
     else return false;
 
 }
-void LedControl::drowDisplay(){
+void LedControl::drawDisplay(){
       for(int x=0;x<8;x++){
       for(int y=0;y<16;y++){
           setLed(abs(x-7),y,display[abs(x-7)][y]);
@@ -208,4 +208,23 @@ void LedControl::fullLine(){
             }
         }
     }
+}
+int LedControl::getKey(){
+    pinMode(A1,INPUT);
+    pinMode(2,INPUT);
+    pinMode(3,INPUT);
+    int keyCode=0;
+    int a=analogRead(A1);
+    if(a>190&&a<213) keyCode=5; // Right
+    delay(10);
+    if(a>240&&a<270) keyCode=6; //Down
+    delay(10);
+    if(a>300&&a<370) keyCode=3;//Up
+    delay(10);
+    if(a>400&&a<520) keyCode=4;//Left
+    delay(10);
+    if(digitalRead(2))keyCode=1;//KEY1
+    delay(10);
+    if(digitalRead(3))keyCode=2;//KEY2
+    return keyCode;
 }

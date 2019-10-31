@@ -10,13 +10,13 @@ int x,y;
 void testFoo(){
     x=1;
     for(y=0;y<16;y++){
-        lc.drowDisplay();    
-        if(digitalRead(5)||digitalRead(6)) x=x+lc.moveX(x,y,0,0,1);
+        lc.drawDisplay();    
+        if(lc.getKey()==3||lc.getKey()==6) x=x+lc.moveX(x,y,0,0,1);
         if(lc.chekCollision(x,y+1)) {
             lc.memDisplay(x,y);
             return;
         }
-        lc.drowPoint(x,y);
+        lc.drawPoint(x,y);
         lc.fullLine();
         delay(100);
     }
@@ -25,25 +25,25 @@ void Stick(){
     x=1;
     byte rotate=0;
     for(y=0;y<16;y++){
-        lc.drowDisplay();
-        if(digitalRead(5)&&digitalRead(6)) rotate++;
-        if(digitalRead(5)||digitalRead(6)) {
+        lc.drawDisplay();
+        if(lc.getKey()==2) rotate++;
+        if(lc.getKey()==3||lc.getKey()==6) {
             if(rotate>1) rotate=0;
             lc.clearDisplay();
-            lc.drowDisplay();
+            lc.drawDisplay();
             if(rotate=0){
                 x=x+lc.moveX(x,y,0,0,1);
-                lc.drowPoint(x,y);
-                lc.drowPoint(x,y-1);
-                lc.drowPoint(x,y-2);
-                lc.drowPoint(x,y-3);
+                lc.drawPoint(x,y);
+                lc.drawPoint(x,y-1);
+                lc.drawPoint(x,y-2);
+                lc.drawPoint(x,y-3);
             }
             if(rotate=1){
                 x=x+lc.moveX(x,y,0,0,1);
-                lc.drowPoint(x,y);
-                lc.drowPoint(x-1,y);
-                lc.drowPoint(x-2,y);
-                lc.drowPoint(x-3,y);
+                lc.drawPoint(x,y);
+                lc.drawPoint(x-1,y);
+                lc.drawPoint(x-2,y);
+                lc.drawPoint(x-3,y);
             }
         }
         if(lc.chekCollision(x,y+1)) {
@@ -61,10 +61,10 @@ void Stick(){
                 lc.memDisplay(x-3,y);
             }
          }
-        lc.drowPoint(x,y);
-        lc.drowPoint(x,y-1);
-        lc.drowPoint(x,y-2);
-        lc.drowPoint(x,y-3);
+        lc.drawPoint(x,y);
+        lc.drawPoint(x,y-1);
+        lc.drawPoint(x,y-2);
+        lc.drawPoint(x,y-3);
         lc.fullLine();
         delay(100);
     }    
@@ -72,15 +72,15 @@ void Stick(){
 void Cube(){
     x=1;
     for(y=0;y<16;y++){
-        lc.drowDisplay();
-        if(digitalRead(5)||digitalRead(6)) {
+        lc.drawDisplay();
+        if(lc.getKey()==3||lc.getKey()==6) {
             lc.clearDisplay();
-            lc.drowDisplay();
+            lc.drawDisplay();
             x=x+lc.moveX(x,y,0,1,1);
-            lc.drowPoint(x,y);
-            lc.drowPoint(x,y+1);
-            lc.drowPoint(x+1,y);
-            lc.drowPoint(x+1,y+1);
+            lc.drawPoint(x,y);
+            lc.drawPoint(x,y+1);
+            lc.drawPoint(x+1,y);
+            lc.drawPoint(x+1,y+1);
         }
         if(lc.chekCollision(x,y+2)||lc.chekCollision(x+1,y+2)) {
             lc.memDisplay(x,y);
@@ -89,10 +89,10 @@ void Cube(){
             lc.memDisplay(x+1,y+1);
             return;
         }
-        lc.drowPoint(x,y);
-        lc.drowPoint(x,y+1);
-        lc.drowPoint(x+1,y);
-        lc.drowPoint(x+1,y+1);
+        lc.drawPoint(x,y);
+        lc.drawPoint(x,y+1);
+        lc.drawPoint(x+1,y);
+        lc.drawPoint(x+1,y+1);
         lc.fullLine();
         delay(100);
     }
@@ -103,12 +103,13 @@ void bigPixel(int x, int y){
     lc.setLed(x+1,y,1);
     lc.setLed(x+1,y+1,1);
 }
+
 void bootloader(){  
     gameis=0;
     for(;;){
-        if(digitalRead(5)) gameis=1;
+        if(lc.getKey()==4) gameis=1;
         delay(10);
-        if(digitalRead(6)) gameis=2;
+        if(lc.getKey()==5) gameis=2;
         delay(10);
         if(gameis==1){
             lc.clearDisplay();
@@ -129,7 +130,7 @@ void bootloader(){
             bigPixel(3,3);
             delay(100);
         }
-        if(digitalRead(5)&&digitalRead(6)) return;
+        if(lc.getKey()==1) return;
     }
 }
 
@@ -160,6 +161,15 @@ void creatCar(int x,int y){
     lc.setLed(x,y-2,1);
     lc.setLed(x-1,y-3,1);
     lc.setLed(x+1,y-3,1);
+}
+void Car(int x,int y){
+    lc.drawPoint(x,y);
+    lc.drawPoint(x,y-1);
+    lc.drawPoint(x-1,y-1);
+    lc.drawPoint(x+1,y-1);
+    lc.drawPoint(x,y-2);
+    lc.drawPoint(x-1,y-3);
+    lc.drawPoint(x+1,y-3);
 }
 void deletCar(int x,int y){
     lc.setLed(x,y,0);
@@ -200,12 +210,12 @@ void gonka(){
         createLine(y+10);
         creatCar(x_car_bot,y+3);
         creatMyCar(position);
-        if(digitalRead(5)){
+        if(lc.getKey()==5){
             deletMyCar(position);
             position=2;
             creatMyCar(position);
         }
-        if(digitalRead(6)){
+        if(lc.getKey()==4){
             deletMyCar(position);
             position=5;
             creatMyCar(position); 
@@ -222,7 +232,7 @@ void setup() {
     lc.shutdown(false);
     lc.setIntensity(0);
     lc.clearDisplay();
-    lc.testMatrix(100);  
+    //lc.testMatrix(100);  
     pinMode(5,INPUT);
     pinMode(6,INPUT);
     Serial.begin(9600);
@@ -245,7 +255,7 @@ void loop() {
     } 
     if(gameis==2){
         for(;;){
-            lc.drowDisplay();
+            lc.drawDisplay();
             x=3;
             byte rand_block=random(0,8);
             Stick();

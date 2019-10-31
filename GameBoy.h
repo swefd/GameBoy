@@ -94,7 +94,7 @@ class LedControl {
         /*
         Включает один пиксель на дисплее, без запоминания в память. 
         */ 
-        void drowPoint(int x,int y);
+        void drawPoint(int x,int y);
         /*
         Выключает один пиксель на дисплее, без стирания из памяти
         */
@@ -107,7 +107,7 @@ class LedControl {
         /*
         Отрисовывает матрицу которая содержит в себе сохраненные точки установленные в высокий уровень. 
         */
-        void drowDisplay();
+        void drawDisplay();
         /*
         Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
         */
@@ -134,11 +134,23 @@ class LedControl {
         */
         bool isFree(int x,int y);
         
+        /*
+         keyCode=1; KEY1
+         keyCode=2; KEY2
+         keyCode=5; Right
+         keyCode=4; Down
+         keyCode=3; Up
+         keyCode=6; Left
+        */
+        int getKey();
+
+
+        
 };
 
 
 
-#endif	//LedControl.h
+#endif	//GameBoy.h
 
 
 
