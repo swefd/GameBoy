@@ -137,14 +137,14 @@ void GameBoy::memDisplay(short int x,short int y){
 void GameBoy::drawPoint(int x,int y){
     x=abs(x-7);
 
-    if(x<8&&x>-1&&y>0&&y<16){
+    if(x<8&&x>-1&&y>-1&&y<16){
         setLed(x,y,1);
     }
     else return;
 }
 void GameBoy::wipePoint(int x,int y){
     x=abs(x-7);
-    if(x<8&&x>0&&y>0&&y<16){
+    if(x<8&&x>0&&y>-1&&y<16){
         setLed(x,y,0);
         display[x][y]=0;
     }
