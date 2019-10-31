@@ -216,15 +216,15 @@ int GameBoy::getKey(){
     int keyCode=0;
     int a=analogRead(A1);
     if(a>190&&a<213) keyCode=5; // Right
-    delay(10);
+    delay(5);
     if(a>240&&a<270) keyCode=6; //Down
-    delay(10);
+    delay(5);
     if(a>300&&a<370) keyCode=3;//Up
-    delay(10);
+    delay(5);
     if(a>400&&a<520) keyCode=4;//Left
-    delay(10);
+    delay(5);
     if(digitalRead(2))keyCode=1;//KEY1
-    delay(10);
+    delay(5);
     if(digitalRead(3))keyCode=2;//KEY2
     return keyCode;
 }
