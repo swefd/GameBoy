@@ -6,7 +6,6 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-LedControl	KEYWORD1
 GameBoy	KEYWORD1
 
 #######################################

@@ -1,6 +1,6 @@
 #include "GameBoy.h"
 
-LedControl lc;
+GameBoy lc;
 byte position=5;
 byte gameis=0;
 int x_cube,y_cube;
