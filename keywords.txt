@@ -23,6 +23,7 @@ chekCollision	KEYWORD2
 drawDisplay	KEYWORD2
 chekState	KEYWORD2
 getKey  KEYWORD2
+isFree  KEYWORD2
 ######################################
 # Constants (LITERAL1)
 #######################################

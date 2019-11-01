@@ -135,26 +135,34 @@ void GameBoy::memDisplay(short int x,short int y){
     display[x][y]=true;
 }
 void GameBoy::drawPoint(int x,int y){
+    if(x<8&&x>-1){
     x=abs(x-7);
-
-    if(x<8&&x>-1&&y>-1&&y<16){
+    if(y>-1&&y<16){
         setLed(x,y,1);
+        display[x][y]=1;
+    }
+    else return;
     }
     else return;
 }
 void GameBoy::wipePoint(int x,int y){
+    if(x<8&&x>-1){
     x=abs(x-7);
-    if(x<8&&x>0&&y>-1&&y<16){
+    if(y>-1&&y<16){
         setLed(x,y,0);
         display[x][y]=0;
     }
     else return;
+    }
+    else return;
 }
 bool GameBoy::chekCollision(int x, int y){
-    x=abs(x-7);
-    if(display[x][y]==1||x>7||x<0||y>15||y<0) return true;
-    else return false;
-
+    if(x<8&&x>-1){
+        x=abs(x-7);
+        if(display[x][y]==1||y>15||y<0) return true;
+        else return false;
+    }
+    else return true;
 }
 void GameBoy::drawDisplay(){
       for(int x=0;x<8;x++){
@@ -168,9 +176,12 @@ bool GameBoy::chekState(int x,int y){
         else false;
 } 
 bool GameBoy::isFree(int x,int y){
-    x=abs(x-7);
-    if(display[x][y]==1||x<0||x>7||y<0||y>15) return false;
-    else return true;
+    if(x<8&&x>-1){
+        x=abs(x-7);
+        if(display[x][y]==1||y>15||y<0) return false;
+        else return true;
+    }
+    else return false;
 }      
 int GameBoy::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
     start_x=abs(start_x-7);
