@@ -9,6 +9,12 @@
 #define DOWN           2
 #define LEFT           3
 #define RIGHT          4
+#define NOTE_B3  247
+#define NOTE_C4  262
+#define SCORE 1
+#define COLLISION 2
+#define BUZZER 4
+
 
 GameBoy::GameBoy() {
     SPI_MOSI=12;
@@ -28,6 +34,27 @@ GameBoy::GameBoy() {
         shutdown(true);
     }
 }
+void GameBoy::sound(int melody) {
+    if (melody == SCORE) {
+    tone(BUZZER, NOTE_B3, 100);
+    int pauseBetweenNotes = 100 * 1.30;
+    delay(pauseBetweenNotes);
+    noTone(BUZZER);
+  }
+  else if (melody == COLLISION) {
+    int melody[] = {
+
+      NOTE_B3, NOTE_C4
+    };
+    for (int i = 0; i < 2; i++) {
+      tone(BUZZER, melody[i], 100);
+      int pauseBetweenNotes = 100 * 1.30;
+      delay(pauseBetweenNotes);
+      noTone(BUZZER);
+  }
+    }
+}
+
 void GameBoy::shutdown(bool b) {
    
     if(b){
@@ -69,12 +96,12 @@ void GameBoy::setLed(int row, int column, boolean state) {
     offset=(addr-1)*8;
     val=B10000000 >> column;
     if(state)
-        status[offset+row]=status[offset+row]|val;
+        status[offset+row] = status[offset+row]|val;
     else {
         val=~val;
-        status[offset+row]=status[offset+row]&val;
+        status[offset+row] = status[offset+row]&val;
     }
-        spiTransfer(addr-1, row+1,status[offset+row]);
+        spiTransfer(addr-1, abs(row-8), status[offset+row]);
     }
     else{
     int offset;
@@ -89,7 +116,7 @@ void GameBoy::setLed(int row, int column, boolean state) {
         val=~val;
         status[offset+row]=status[offset+row]&val;
     }
-        spiTransfer(addr, row+1,status[offset+row]);
+        spiTransfer(addr, abs(row-8),status[offset+row]);
     }
     
 }
@@ -110,137 +137,169 @@ void GameBoy::spiTransfer(int addr, volatile byte opcode, volatile byte data) {
         shiftOut(SPI_MOSI,SPI_CLK,MSBFIRST,spidata[i-1]);
     //latch the data onto the display
     digitalWrite(SPI_CS,HIGH);
-}    
+}  
+
 void GameBoy::testMatrix(short int delaytime){
-for(int x=0;x<8;x++){
-    for(int y=0;y<16;y++){
-        setLed(x,y,true);
+for(int x = 0; x < 8; x++){
+    for(int y = 0; y < 16; y++){
+        setLed(x, y, true);
         delay(delaytime);
     }
 } 
-delay(delaytime*10);
+delay(delaytime * 10);
 clearDisplay();
-delay(delaytime/10);
-for(int y1=0;y1<16;y1++){
-    for(int x1=0;x1<8;x1++){
-        setLed(x1,y1,true);
+delay(delaytime / 10);
+for(int y1 = 0; y1 < 16; y1++){
+    for(int x1 = 0; x1 < 8; x1++){
+        setLed(x1, y1, true);
         delay(delaytime);
     }
 }
 clearDisplay();       
 }
 
-void GameBoy::memDisplay(short int x,short int y){
-    x=abs(x-7);
-    display[x][y]=true;
+void GameBoy::memDisplay(short int x, short int y){
+    display[x][y] = true;
 }
-void GameBoy::drawPoint(int x,int y){
-    if(x<8&&x>-1){
-    x=abs(x-7);
-    if(y>-1&&y<16){
-        setLed(x,y,1);
-        display[x][y]=1;
-    }
-    else return;
+void GameBoy::drawPoint(int x, int y){
+    if(x < 8 && x > -1){
+        if(y > -1 && y < 16){
+            setLed(x, y, 1);
+        }
+        else return;
     }
     else return;
 }
-void GameBoy::wipePoint(int x,int y){
-    if(x<8&&x>-1){
-    x=abs(x-7);
-    if(y>-1&&y<16){
-        setLed(x,y,0);
-        display[x][y]=0;
-    }
-    else return;
+void GameBoy::wipePoint(int x, int y){
+    if(x < 8 && x >- 1){
+        if(y >-1 && y < 16){
+            setLed(x, y, 0);
+            display[x][y] = 0;
+        }
+        else return;
     }
     else return;
 }
-bool GameBoy::chekCollision(int x, int y){
-    if(x<8&&x>-1){
-        x=abs(x-7);
-        if(display[x][y]==1||y>15||y<0) return true;
+bool GameBoy::checkCollision(int x, int y){
+    if(x < 8 && x > -1){
+        if(display[x][y] == 1 || y > 15) return true;
         else return false;
     }
     else return true;
 }
+
 void GameBoy::drawDisplay(){
-      for(int x=0;x<8;x++){
-      for(int y=0;y<16;y++){
-          setLed(abs(x-7),y,display[abs(x-7)][y]);
-      }
-  }
+    for(int x = 0; x < 8; x++){
+        for(int y = 0; y < 16; y++){
+            setLed(x, y, display[x][y]);
+        }
+    }
 }
-bool GameBoy::chekState(int x,int y){
-        if(display[x][y]==1) return true;
+
+bool GameBoy::chekState(int x, int y){
+        if(display[x][y] == 1) return true;
         else false;
 } 
+
 bool GameBoy::isFree(int x,int y){
-    if(x<8&&x>-1){
-        x=abs(x-7);
-        if(display[x][y]==1||y>15||y<0) return false;
+    if(x<8 && x>-1){
+        if(display[x][y]==1 || y>15 || y < 0) return false;
         else return true;
     }
     else return false;
 }      
 int GameBoy::moveX(int start_x, int start_y,int left_x,int right_x, int move_var ){
-    start_x=abs(start_x-7);
-    if(getKey()==4){
+    if(getKey() == 4){
         if(display[start_x-move_var-right_x][start_y]==1||start_x-move_var-right_x<0) return 0;
         else return move_var;
     }
-    else if(getKey()==5){
+    else if(getKey() == 5){
         if(display[start_x+move_var+left_x][start_y]==1||start_x+move_var+left_x>7) return 0;
         else return -move_var;
     }
     else return 0;
 }
 void GameBoy::clearLine(byte num_line){
-    for(int x=0;x<8;x++) {
-        display[abs(x-7)][num_line]=false;
-        setLed(abs(x-7),num_line,0);
+    for(int x = 0; x < 8; x++) {
+        display[x][num_line] = false;
+        setLed(x, num_line, 0);
     }
 }        
-void GameBoy::fullLine(){
-    for(int y=15;y>-1;y--){
-        byte count=0;
-        for(int x=0;x<8;x++){
-            if(display[abs(x-7)][y]==true){
+int GameBoy::fullLine(){
+    int lines = 0;
+    bool res = false;
+    for(int y = 15; y > -1; y--){
+        byte count = 0;
+        for(int x = 0; x < 8; x++){
+            if(display[x][y] == true){
                 count++;
             }
-            if(count==8) {
-                clearLine(y);
-                for(y;y>0;y=y-1){  
-                    for(int x=0;x<8;x++){
-                        display[abs(x-7)][y]=display[abs(x-7)][y-1];
-                    }
-                    clearLine(y-1);
-                }    
+        }
+        if(count == 8) {
+            lines++;
+            res = true;
+            clearLine(y);
+            for(int _y = y; _y > 0; _y--){  
+                for(int x = 0; x < 8; x++){
+                    display[x][_y] = display[x][_y-1];
+                }
             }
+            y++;
         }
     }
+    return lines;
 }
+
 int GameBoy::getKey(){
-    pinMode(A1,INPUT);
-    pinMode(2,INPUT);
-    pinMode(3,INPUT);
-    int keyCode=0;
-    int a=analogRead(A1);
-    if(a>190&&a<213) keyCode=5; // Right
-    delay(5);
-    if(a>240&&a<270) keyCode=6; //Down
-    delay(5);
-    if(a>300&&a<370) keyCode=3;//Up
-    delay(5);
-    if(a>400&&a<520) keyCode=4;//Left
-    delay(5);
-    if(digitalRead(2))keyCode=1;//KEY1
-    delay(5);
-    if(digitalRead(3))keyCode=2;//KEY2
+    pinMode(A1, INPUT);
+    pinMode(2, INPUT);
+    pinMode(3, INPUT);
+    int keyCode = 0;
+    int a = analogRead(A1);
+    if(a > 160 && a < 180) keyCode = 5; // Right
+    if(a > 190 && a < 210) keyCode = 6; //Down
+    if(a > 240 && a < 260) keyCode = 3; //Up
+    if(a > 330 && a < 350) keyCode = 4; //Left
+    if(digitalRead(2)) keyCode = 1;//KEY1
+    if(digitalRead(3)) keyCode = 2;//KEY2
     return keyCode;
 }
-void GameBoy::begin(byte Intensity){
+void GameBoy::begin(int Intensity){
     shutdown(false);
-    setIntensity(0);
+    setIntensity(Intensity);
     clearDisplay();
+	random(0,7);
 }
+
+/* UPDATE */ 
+
+void GameBoy::generateBlock(byte block[4][4][4], byte arr1[4][4], byte arr2[4][4], byte arr3[4][4], byte arr4[4][4] ) {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      block[0][i][j] = arr1[i][j];
+      block[1][i][j] = arr2[i][j];
+      block[2][i][j] = arr3[i][j];
+      block[3][i][j] = arr4[i][j];
+    }
+  }
+}
+
+void GameBoy::memBlock(byte arr[4][4], int x, int y) {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      if (arr[j][i] == 1) {
+        memDisplay(x + i, y + j);
+      }
+    }
+  }
+}
+
+bool GameBoy::checkBlockCollision(byte arr[4][4], int x, int y) {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      if (arr[j][i] == 1 && (checkCollision(x + i, y + j))) return true;
+    }
+  }
+  return false;
+}
+

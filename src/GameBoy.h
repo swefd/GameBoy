@@ -8,6 +8,8 @@
 #define DOWN  2
 #define LEFT  3
 #define RIGHT 4
+#define SCORE 1
+#define COLLISION 2
 
 class GameBoy {
     private :
@@ -30,6 +32,7 @@ class GameBoy {
        int maxDevices=2;
        const int addr=1;
        bool display[8][16]; 
+	   byte block[4][4][4];
         /* 
          * Create a new controler 
          * Params :
@@ -49,7 +52,7 @@ class GameBoy {
          */
         void shutdown(bool status);
 
-
+		void sound(int melody);
 
         /* 
          * Set the brightness of the display.
@@ -99,7 +102,7 @@ class GameBoy {
         Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
         Так же проверяет не выходит ли за границы дисплея данный пиксель.
         */
-        bool chekCollision(int x, int y);
+        bool checkCollision(int x, int y);
         /*
         Отрисовывает матрицу которая содержит в себе сохраненные точки установленные в высокий уровень. 
         */
@@ -123,7 +126,7 @@ class GameBoy {
         /*
         Ищет заполненную линию в памяти дисплея и очищает ее. 
         */
-        void fullLine();
+        int fullLine();
         /*
         Проверяет данную точку на условие включен ли этот пиксель и занесен ли он память.
         Так же проверяет не выходит ли за границы дисплея данный пиксель.
@@ -141,10 +144,13 @@ class GameBoy {
         int getKey();
         
 
-        void begin(byte Intensity);
-
-
-        
+        void begin(int Intensity);
+		
+		void generateBlock(byte block[4][4][4], byte arr1[4][4], byte arr2[4][4], byte arr3[4][4], byte arr4[4][4]);
+		
+		void memBlock(byte arr[4][4], int x, int y);
+		
+		bool checkBlockCollision(byte arr[4][4], int x, int y);
 };
 
 

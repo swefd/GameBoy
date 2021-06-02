@@ -13,7 +13,7 @@ void testFoo(){
     for(y=0;y<16;y++){
         lc.drawDisplay();    
         if(lc.getKey()==3||lc.getKey()==6) x=x+lc.moveX(x,y,0,0,1);
-        if(lc.chekCollision(x,y+1)) {
+        if(lc.checkCollision(x,y+1)) {
             lc.memDisplay(x,y);
             return;
         }
@@ -47,7 +47,7 @@ void Stick(){
                 lc.drawPoint(x-3,y);
             }
         }
-        if(lc.chekCollision(x,y+1)) {
+        if(lc.checkCollision(x,y+1)) {
             if(rotate=0){
                 lc.memDisplay(x,y);
                 lc.memDisplay(x,y-1);
@@ -83,7 +83,7 @@ void Cube(){
             lc.drawPoint(x+1,y);
             lc.drawPoint(x+1,y+1);
         }
-        if(lc.chekCollision(x,y+2)||lc.chekCollision(x+1,y+2)) {
+        if(lc.checkCollision(x,y+2)||lc.checkCollision(x+1,y+2)) {
             lc.memDisplay(x,y);
             lc.memDisplay(x,y+1);
             lc.memDisplay(x+1,y);

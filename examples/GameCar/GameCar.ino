@@ -38,12 +38,16 @@ else enemy_position=5;
       deletMyCar(pos);
       pos=2;
     }
-    if(pos==enemy_position&&yT==8) {
+    if(yT==11){
+      gb.sound(SCORE);
+    }
+    if((pos==enemy_position&&yT==8) or (gb.getKey()==4 and (gb.checkCollision(2,13))) or (gb.getKey()==5 and (gb.checkCollision(5,13)))) {
       gb.testMatrix(10);
       gb.clearDisplay();
       return;
     }
-    delay(0);
+   
+    delay(200);
     deletCar(enemy_position,yT+4);
     deletLine(yT);
     deletLine(yT+5);
